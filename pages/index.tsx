@@ -1,8 +1,6 @@
 import Image from "next/image";
-import HeroImg from "@/public/hero-img.png";
 import MissionBoxImg from "@/public/mission-box.svg";
 import VisionBoxImg from "@/public/vision-box.svg";
-import ServiceBanner from "@/public/service-banner.svg";
 import RittyMiniIcon from "@/public/ritty-mini-logo.svg";
 import SojeongInfo from "@/public/info-cards/sojeong.svg";
 import ChangjoonInfo from "@/public/info-cards/changjun.svg";
@@ -10,6 +8,7 @@ import JaehoonInfo from "@/public/info-cards/jaehoon.svg";
 import KiyeonInfo from "@/public/info-cards/kiyeon.svg";
 import JinaInfo from "@/public/info-cards/jina.svg";
 import SammeowsInfo from "@/public/info-cards/sammeows.svg";
+import BottomHeroGradTextPC from "@/public/bottom-hero-text-grad_PC.svg";
 import BottomHeroGradText from "@/public/bottom-hero-text-grad.svg";
 import InstagramIcon from "@/public/contact-icons/instagram.svg";
 import DiscordIcon from "@/public/contact-icons/discord.svg";
@@ -23,8 +22,12 @@ import SammeowsLogoEn from "@/public/sammeows-logo-en.svg";
 import MailMiniIcon from "@/public/link-icons/mail-icon.svg";
 import LinkedInMiniIcon from "@/public/link-icons/linkedin-icon.svg";
 import DisquietMiniIcon from "@/public/link-icons/disquiet-icon.svg";
+import ServiceBanner from "@/public/service-banner.png";
+import ServiceBannerPC from "@/public/service-banner_PC.png";
 import { useState } from "react";
 
+// sm: 핸드폰, md: 태블릿, xl: 데스크탑
+// sm: 핸드폰, md: 태블릿, xl: 데스크탑
 type Section = "" | "about us" | "service" | "team" | "contact";
 
 type Link = {
@@ -129,6 +132,9 @@ const PERSONAL_INFO_LINKS = {
   },
 } as const;
 
+const LineBreakMobileOnly = () => <br className="block md:hidden" />;
+const LineBreakDesktopOnly = () => <br className="hidden md:block" />;
+
 const LinkContainer = ({ linkInfo }: { linkInfo: Link }) => {
   return (
     <button
@@ -179,7 +185,7 @@ export default function Home() {
             className={
               selectedSection === "about us"
                 ? "h-[35px] text-[#FF6161] rounded-full bg-[#FFEFEF] py-[7px] px-[12px]"
-                : "h-[35px] hover:text-[#FF6161]"
+                : "h-[35px] hover:text-[#FF6161] text-[#9AA2AE]"
             }
             onClick={() => handleScrollToSection("about us")}
           >
@@ -191,7 +197,7 @@ export default function Home() {
             className={
               selectedSection === "service"
                 ? "h-[35px] text-[#FF6161] rounded-full bg-[#FFEFEF] py-[7px] px-[12px]"
-                : "h-[35px] hover:text-[#FF6161]"
+                : "h-[35px] hover:text-[#FF6161] text-[#9AA2AE]"
             }
             onClick={() => handleScrollToSection("service")}
           >
@@ -203,7 +209,7 @@ export default function Home() {
             className={
               selectedSection === "team"
                 ? "h-[35px] text-[#FF6161] rounded-full bg-[#FFEFEF] py-[7px] px-[12px]"
-                : "h-[35px] hover:text-[#FF6161]"
+                : "h-[35px] hover:text-[#FF6161] text-[#9AA2AE]"
             }
             onClick={() => handleScrollToSection("team")}
           >
@@ -215,7 +221,7 @@ export default function Home() {
             className={
               selectedSection === "contact"
                 ? "h-[35px] text-[#FF6161] rounded-full bg-[#FFEFEF] py-[7px] px-[12px]"
-                : "h-[35px] hover:text-[#FF6161]"
+                : "h-[35px] hover:text-[#FF6161] text-[#9AA2AE]"
             }
             onClick={() => handleScrollToSection("contact")}
           >
@@ -223,17 +229,33 @@ export default function Home() {
           </button>
         </div>
       </section>
+
       {/* About Us Hero Section */}
-      <section id="about us" className="relative w-full h-fit">
-        <Image src={HeroImg} alt="heroImg" />
-        <button
-          onClick={() => handleScrollToSection("service")}
-          className="absolute top-2/3 left-2/11 ml-[8px] bg-[#FF6161] w-[168px] h-[48px] rounded-full text-white font-semibold text-[20px] border-[#FF9292] border-[2px] cursor-pointer hover:shadow-[0_0_20px_#FF616180] transition-all duration-300"
-        >
-          Learn More &gt;
-        </button>
+      <section
+        id="about us"
+        className="relative w-full flex flex-col lg:items-center md:items-start h-[720px] bg-[url('/hero-bg.png')] bg-cover bg-no-repeat bg-[position:65%_-15px] md:bg-[position:65%_0] xl:bg-center"
+      >
+        {/* <Image src={HeroImg} alt="heroImg" /> */}
+        <div className="max-w-[1120px] w-full mx-auto text-white md:text-[62px] text-[44px] font-semibold pb-[22px] md:ml-[40px] xl:ml-0 md:mt-[150px] mt-[380px] pl-[20px] leading-[120%]">
+          We Build
+          <LineBreakMobileOnly /> Friends
+          <LineBreakDesktopOnly /> For <LineBreakMobileOnly />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFBC70] via-[#FF7B7B] to-[#FF52F9]">
+            Everyone
+          </span>
+          <div className="md:text-[20px] text-[16px] font-normal leading-[132%] bg-[#ffffff40] backdrop-blur-md rounded-[10px] pr-[15px] pl-[12px] md:py-[4px] py-[5px] w-fit md:mb-[50px] mb-[30px] md:mt-[20px] mt-[14px]">
+            Because everyone deserves
+            <LineBreakMobileOnly /> a little warmth.
+          </div>
+          <button
+            onClick={() => handleScrollToSection("service")}
+            className="flex justify-center items-center gap-[10px] pt-[1px] bg-[#FF6161] md:w-[168px] w-[130px] md:h-[48px] h-[38px] rounded-full text-white font-semibold md:text-[20px] text-[16px] border-[#FF9292] border-[2px] cursor-pointer hover:shadow-[0_0_20px_#FF616180] transition-all duration-300"
+          >
+            Learn More &gt;
+          </button>
+        </div>
       </section>
-      <section className="flex flex-row py-[150px] bg-white items-center justify-center">
+      <section className="flex md:flex-row flex-col md:py-[150px] py-[100px] bg-white items-center justify-center">
         <div className="relative">
           <Image
             src={MissionBoxImg}
@@ -268,12 +290,38 @@ export default function Home() {
       {/* Service Section */}
       <section
         id="service"
-        className="relative w-full h-fit bg-[#F6F7F9] py-[150px] flex flex-col items-center gap-[60px]"
+        className="relative w-full h-fit bg-[#F6F7F9] py-[155px] flex flex-col items-center gap-[60px] md:gap-[40px] px-[20px] md:px-0"
       >
-        <Image src={ServiceBanner} alt="service banner" width={1120} />
+        <div className="flex flex-col text-center">
+          <span className="text-[#9AA2AE] font-medium text-[15px] md:text-[18px]">
+            Our Service
+          </span>
+          <h2 className="font-semibold text-[32px] md:text-[36px] text-[#3F404D] leading-[125%] mt-[30px] md:mt-[25px] mb-[15px] md:mb-[12px]">
+            Your Friendly
+            <LineBreakMobileOnly /> AI Companion,
+            <LineBreakMobileOnly />
+            <span className="text-[#716BF8]">Ritty</span>
+          </h2>
+          <span className="text-[#3F404D] text-[15px] md:text-[18px]">
+            Built to chat, care, and grow
+            <LineBreakMobileOnly /> with you every day.
+          </span>
+        </div>
+        <Image
+          src={ServiceBanner}
+          alt="service banner"
+          width={1120}
+          className="block md:hidden"
+        />
+        <Image
+          src={ServiceBannerPC}
+          alt="service banner"
+          width={1120}
+          className="hidden md:block"
+        />
         <button
           onClick={() => window.open("https://ritty.me", "_blank")}
-          className="flex justify-center items-center gap-[10px] bg-[#6B65FF] w-[270px] h-[58px] rounded-full text-white font-semibold text-[20px] border-[#ffffff9d] border-[2px] cursor-pointer hover:shadow-[0_0_20px_#6B65FF80] transition-all duration-300"
+          className="flex justify-center items-center gap-[10px] bg-[#6B65FF] md:w-[270px] w-[196px] md:h-[58px] h-[46px] rounded-full text-white font-semibold border-[#ffffff9d] border-[2px] cursor-pointer hover:shadow-[0_0_20px_#6B65FF80] transition-all duration-300 text-[14px] md:text-[20px]"
         >
           <Image
             src={RittyMiniIcon}
@@ -291,7 +339,7 @@ export default function Home() {
         className="w-full flex flex-col items-center justify-center bg-white pt-[150px] pb-[120px] text-[#9AA2AE] text-[18px]"
       >
         Our Team
-        <div className="w-fit h-fit grid grid-cols-3 grid-rows-2 mt-[42px]">
+        <div className="w-fit h-fit grid md:grid-cols-3 md:grid-rows-2 grid-cols-1 mt-[42px]">
           <div className="w-fit h-full relative">
             <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
               {PERSONAL_INFO_LINKS.Sojeong.links.map((link) => (
@@ -308,7 +356,7 @@ export default function Home() {
             </div>
             <Image src={ChangjoonInfo} alt="changjoon's personal info" />
           </div>
-          <div className="w-fit h-full relative">
+          <div className="w-fit h-full relative hidden md:block">
             <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
               {PERSONAL_INFO_LINKS.Sammeows.links.map((link) => (
                 <LinkContainer key={link.type} linkInfo={link} />
@@ -340,31 +388,49 @@ export default function Home() {
             </div>
             <Image src={JinaInfo} alt="jina's personal info" />
           </div>
+          <div className="w-fit h-full relative block md:hidden">
+            <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
+              {PERSONAL_INFO_LINKS.Sammeows.links.map((link) => (
+                <LinkContainer key={link.type} linkInfo={link} />
+              ))}
+            </div>
+            <Image src={SammeowsInfo} alt="sammeows's personal info" />
+          </div>
         </div>
       </section>
       <section className="flex flex-col items-center justify-center bg-[url('/bottom-hero-grad-bg.svg')] bg-cover bg-center">
         <Image
+          src={BottomHeroGradTextPC}
+          alt="team introduction"
+          className="hidden md:block pb-[150px]"
+        />
+        <Image
           src={BottomHeroGradText}
           alt="team introduction"
-          className="pb-[150px]"
+          width={285}
+          height={200}
+          className="block md:hidden md:pb-[150px] pb-[0px]"
         />
 
         {/* Contact Section */}
         <section
           id="contact"
-          className="flex flex-row items-end py-[150px] max-w-[1120px] w-full mx-auto justify-between"
+          className="flex md:flex-row flex-col-reverse md:items-end items-center py-[150px] max-w-[1120px] w-full mx-auto justify-between px-[20px] lg:px-0 gap-[120px] md:gap-[0px]"
         >
           {/* 왼쪽 텍스트 */}
-          <div>
-            <h1 className="text-[#FF6161] text-[45px] font-semibold pb-[22px] leading-[120%]">
+          <div className="text-center md:text-left">
+            <h1 className="text-[#FF6161] md:text-[45px] text-[30px] font-semibold pb-[22px] leading-[120%]">
               Curious to know
               <br />
               more about us?
             </h1>
             <p className="flex flex-col gap-[6px] text-[16px] text-[#3f404d] font-normal leading-[130%] pb-[35px]">
               <span className="">
-                If you have any questions, feel free to contact <br />
-                us anytime to the follow mail address!
+                If you have any questions,
+                <LineBreakMobileOnly />
+                feel free to contact <LineBreakDesktopOnly />
+                us anytime to <LineBreakMobileOnly />
+                the follow mail address!
               </span>
               <span
                 className="flex gap-[8px] cursor-pointer hover:underline transition-all duration-300"
@@ -376,7 +442,7 @@ export default function Home() {
                 contact@sam-meows.com
               </span>
             </p>
-            <div className="flex flex-col gap-[15px]">
+            <div className="flex flex-col gap-[15px] md:items-start items-center">
               <h5 className="text-[#3F404D] font-semibold text-[16px]">
                 Community
               </h5>
@@ -405,7 +471,7 @@ export default function Home() {
             </div>
           </div>
           {/* 오른쪽 폼 */}
-          <div className="w-[500px] flex flex-col gap-[28px] text-[#2E3238] text-[16px] font-medium bg-white rounded-[28px] py-[32px] px-[24px] shadow-[0px_0px_10px_0px_rgba(116,92,101,0.2)]">
+          <div className="md:w-[500px] w-full mx-[20px] md:mx-0 flex flex-col gap-[28px] text-[#2E3238] text-[16px] font-medium bg-white rounded-[28px] py-[32px] px-[24px] shadow-[0px_0px_10px_0px_rgba(116,92,101,0.2)]">
             <div className="flex flex-col gap-[8px]">
               <label>Name</label>
               <input
@@ -435,17 +501,24 @@ export default function Home() {
           </div>
         </section>
       </section>
-      <footer className="flex flex-row gap-[100px] justify-between py-[150px] h-fit w-full max-w-[1120px] mx-auto">
+      <footer className="flex md:flex-row flex-col gap-[100px] md:justify-between items-center py-[150px] h-fit w-full max-w-[1120px] mx-auto">
         {/* 왼쪽 텍스트 */}
-        <div className="flex flex-col gap-[15px]">
+        <div className="flex flex-col gap-[15px] text-center md:text-left">
           <h4 className="text-[#2E3238] font-semibold">
-            Bringing warmth to the world through AI.
+            Bringing warmth to <LineBreakMobileOnly />
+            the world through AI.
           </h4>
-          <p className="flex flex-col gap-[10px] text-[#9AA2AE] text-[14px] font-normal leading-[136%]">
-            <span>문의 contact@sam-meows.com</span>
+          <p className="flex flex-col gap-[10px] text-[#9AA2AE] text-[14px] font-normal md:leading-[136%] leading-[150%]">
             <span>
-              205-1204, Sucheong 1-ro, Dangjin-si, ChungcheongNam-do
-              <br /> Republic of Korea
+              <span className="font-semibold">Contact </span>
+              <LineBreakMobileOnly />
+              contact@sam-meows.com
+            </span>
+            <span>
+              205-1204, Sucheong 1-ro, <LineBreakMobileOnly />
+              Dangjin-si, ChungcheongNam-do <LineBreakMobileOnly />
+              <LineBreakDesktopOnly />
+              Republic of Korea
             </span>
           </p>
         </div>
