@@ -1,13 +1,5 @@
 import Image from "next/image";
-import MissionBoxImg from "@/public/mission-box.svg";
-import VisionBoxImg from "@/public/vision-box.svg";
 import RittyMiniIcon from "@/public/ritty-mini-logo.svg";
-import SojeongInfo from "@/public/info-cards/sojeong.svg";
-import ChangjoonInfo from "@/public/info-cards/changjun.svg";
-import JaehoonInfo from "@/public/info-cards/jaehoon.svg";
-import KiyeonInfo from "@/public/info-cards/kiyeon.svg";
-import JinaInfo from "@/public/info-cards/jina.svg";
-import SammeowsInfo from "@/public/info-cards/sammeows.svg";
 import BottomHeroGradTextPC from "@/public/bottom-hero-text-grad_PC.svg";
 import BottomHeroGradText from "@/public/bottom-hero-text-grad.svg";
 import InstagramIcon from "@/public/contact-icons/instagram.svg";
@@ -15,16 +7,10 @@ import DiscordIcon from "@/public/contact-icons/discord.svg";
 import LinkedInIcon from "@/public/contact-icons/linkedin.svg";
 import KakaoTalkIcon from "@/public/contact-icons/kakaotalk.svg";
 import MailIcon from "@/public/contact-icons/mail.svg";
-import SammeowsLogo from "@/public/sammeows-logo.svg";
-import Cone1 from "@/public/cone1.png";
-import Cone2 from "@/public/cone2.png";
-import SammeowsLogoEn from "@/public/sammeows-logo-en.svg";
 import MailMiniIcon from "@/public/link-icons/mail-icon.svg";
 import LinkedInMiniIcon from "@/public/link-icons/linkedin-icon.svg";
 import DisquietMiniIcon from "@/public/link-icons/disquiet-icon.svg";
-import ServiceBanner from "@/public/service-banner.png";
-import ServiceBannerPC from "@/public/service-banner_PC.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // sm: 핸드폰, md: 태블릿, xl: 데스크탑
 // sm: 핸드폰, md: 태블릿, xl: 데스크탑
@@ -132,13 +118,13 @@ const PERSONAL_INFO_LINKS = {
   },
 } as const;
 
-const LineBreakMobileOnly = () => <br className="block md:hidden" />;
-const LineBreakDesktopOnly = () => <br className="hidden md:block" />;
+const LineBreakMobileOnly = () => <br className="block sm:hidden" />;
+const LineBreakDesktopOnly = () => <br className="hidden sm:block" />;
 
 const LinkContainer = ({ linkInfo }: { linkInfo: Link }) => {
   return (
     <button
-      className="flex gap-[4px] bg-[#3F404D] rounded-[6px] text-[12px] text-white py-[3px] px-[5px] w-fit h-fit font-normal hover:bg-[#3F404D]/80 transition-all duration-300"
+      className="flex items-center gap-[4px] lg:gap-[2px] max-md:gap-[4px] bg-[#3F404D] rounded-[6px] lg:text-[12px] text-[10px] max-md:text-[12px] text-white py-[3px] px-[5px] w-fit h-fit font-normal hover:bg-[#3F404D]/80 transition-all duration-300"
       onClick={() => window.open(linkInfo.url, "_blank")}
     >
       <Image
@@ -161,6 +147,35 @@ const LinkContainer = ({ linkInfo }: { linkInfo: Link }) => {
 export default function Home() {
   const [selectedSection, setSelectedSection] = useState<Section>("");
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the section that is most visible
+        const mostVisibleSection = entries.reduce((mostVisible, entry) => {
+          if (!mostVisible) return entry;
+          const currentRatio = entry.intersectionRatio;
+          const mostVisibleRatio = mostVisible.intersectionRatio;
+          return currentRatio > mostVisibleRatio ? entry : mostVisible;
+        }, null as IntersectionObserverEntry | null);
+
+        if (mostVisibleSection && mostVisibleSection.intersectionRatio === 0) {
+          setSelectedSection(mostVisibleSection.target.id as Section);
+        }
+      },
+      {
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+      }
+    );
+
+    // Observe all sections
+    const sectionElements = document.querySelectorAll("section[id]");
+    sectionElements.forEach((section) => observer.observe(section));
+
+    return () => {
+      sectionElements.forEach((section) => observer.unobserve(section));
+    };
+  }, []);
+
   const handleScrollToSection = (section: Section) => {
     setSelectedSection(section);
     const element = document.getElementById(section);
@@ -174,17 +189,24 @@ export default function Home() {
       {/* Top Navigation Bar */}
       <section className="fixed top-[30px] z-10 flex p-[8px] pl-[20px] font-semibold font-[#9AA2AE] text-[14px] bg-white rounded-full left-1/2 -translate-x-1/2 transition-colors duration-300 shadow-[0_0_20px_#ff616138]">
         <Image
-          src={SammeowsLogoEn}
+          src={"/sammeows-logo-en.svg"}
           alt="sammeows logo"
           width={107}
           height={16}
-          className="-mt-[3px] mr-[15px]"
+          className="-mt-[3px] mr-[15px] hidden md:block"
         />
-        <div className="flex justify-center items-center w-[90px] h-[35px] cursor-pointer">
+        <Image
+          src={"/sammeows-logo-sm.svg"}
+          alt="sammeows logo"
+          width={15}
+          height={8}
+          className="-mt-[3px] mr-[15px] block md:hidden"
+        />
+        <div className="flex justify-center items-center w-[90px] h-[35px] cursor-pointer whitespace-nowrap">
           <button
             className={
               selectedSection === "about us"
-                ? "h-[35px] text-[#FF6161] rounded-full bg-[#FFEFEF] py-[7px] px-[12px]"
+                ? "h-[35px] text-[#FF6161] rounded-full bg-[#FFEFEF] py-[7px] px-[12px] max-sm:px-[8px]"
                 : "h-[35px] hover:text-[#FF6161] text-[#9AA2AE]"
             }
             onClick={() => handleScrollToSection("about us")}
@@ -233,17 +255,17 @@ export default function Home() {
       {/* About Us Hero Section */}
       <section
         id="about us"
-        className="relative w-full flex flex-col lg:items-center md:items-start h-[720px] bg-[url('/hero-bg.png')] bg-cover bg-no-repeat bg-[position:65%_-15px] md:bg-[position:65%_0] xl:bg-center"
+        className="relative w-full flex flex-col lg:items-center md:items-start h-[720px] max-sm:h-[670px] bg-[url('/hero-bg.png')] bg-cover bg-no-repeat bg-[position:65%_-15px] md:bg-[position:65%_0] xl:bg-center"
       >
         {/* <Image src={HeroImg} alt="heroImg" /> */}
-        <div className="max-w-[1120px] w-full mx-auto text-white md:text-[62px] text-[44px] font-semibold pb-[22px] md:ml-[40px] xl:ml-0 md:mt-[150px] mt-[380px] pl-[20px] leading-[120%]">
+        <div className="max-w-[1120px] w-full h-full mx-auto text-white sm:text-[62px] text-[44px] font-semibold pb-[22px] sm:mt-[150px] mt-[30px] pl-[20px] sm:pl-[40px] xl:pl-[0px] leading-[120%] max-sm:mt-[365px] max-sm:leading-[100%]">
           We Build
           <LineBreakMobileOnly /> Friends
           <LineBreakDesktopOnly /> For <LineBreakMobileOnly />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFBC70] via-[#FF7B7B] to-[#FF52F9]">
             Everyone
           </span>
-          <div className="md:text-[20px] text-[16px] font-normal leading-[132%] bg-[#ffffff40] backdrop-blur-md rounded-[10px] pr-[15px] pl-[12px] md:py-[4px] py-[5px] w-fit md:mb-[50px] mb-[30px] md:mt-[20px] mt-[14px]">
+          <div className="md:text-[20px] text-[16px] font-normal leading-[132%] bg-[#ffffff40] backdrop-blur-md rounded-[10px] pr-[15px] pl-[12px] md:py-[4px] py-[5px] w-fit md:mb-[50px] mb-[25px] md:mt-[20px] mt-[14px]">
             Because everyone deserves
             <LineBreakMobileOnly /> a little warmth.
           </div>
@@ -258,39 +280,25 @@ export default function Home() {
       <section className="flex md:flex-row flex-col md:py-[150px] py-[100px] bg-white items-center justify-center">
         <div className="relative">
           <Image
-            src={MissionBoxImg}
+            src={"/mission-box.png"}
             alt="missionBoxImg"
             width={465}
             height={278}
           />
-          <Image
-            src={Cone1}
-            alt="cone1"
-            width={88}
-            height={88}
-            className="absolute top-[90px] left-[48px]"
-          />
         </div>
         <div className="relative">
           <Image
-            src={VisionBoxImg}
+            src={"/vision-box.png"}
             alt="visionBoxImg"
             width={465}
             height={278}
-          />
-          <Image
-            src={Cone2}
-            alt="cone2"
-            width={88}
-            height={88}
-            className="absolute top-[90px] left-[48px]"
           />
         </div>
       </section>
       {/* Service Section */}
       <section
         id="service"
-        className="relative w-full h-fit bg-[#F6F7F9] py-[155px] flex flex-col items-center gap-[60px] md:gap-[40px] px-[20px] md:px-0"
+        className="relative w-full h-fit bg-[#F6F7F9] py-[155px] max-sm:py-[145px] flex flex-col items-center gap-[60px] md:gap-[40px] px-[20px] md:px-0"
       >
         <div className="flex flex-col text-center">
           <span className="text-[#9AA2AE] font-medium text-[15px] md:text-[18px]">
@@ -308,15 +316,17 @@ export default function Home() {
           </span>
         </div>
         <Image
-          src={ServiceBanner}
+          src={"/service-banner.png"}
           alt="service banner"
-          width={1120}
+          width={388}
+          height={450}
           className="block md:hidden"
         />
         <Image
-          src={ServiceBannerPC}
+          src={"/service-banner_PC.png"}
           alt="service banner"
           width={1120}
+          height={500}
           className="hidden md:block"
         />
         <button
@@ -341,60 +351,151 @@ export default function Home() {
         Our Team
         <div className="w-fit h-fit grid md:grid-cols-3 md:grid-rows-2 grid-cols-1 mt-[42px]">
           <div className="w-fit h-full relative">
-            <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
-              {PERSONAL_INFO_LINKS.Sojeong.links.map((link) => (
-                <LinkContainer key={link.type} linkInfo={link} />
-              ))}
+            <div className="absolute flex flex-col gap-[4px] w-full bottom-[30px] lg:px-[28px] px-[22px] max-md:px-[28px]">
+              <span className="text-[#3F404D] lg:text-[20px] text-[18px] max-md:text-[20px] font-medium ">
+                Sojeong Choi
+              </span>
+              <span className="text-[#FF6161] lg:text-[14px] text-[13px] max-md:text-[14px] font-medium -mt-1">
+                Co-Founder & CEO
+              </span>
+              <div className="h-[42px] lg:h-[52px] max-md:h-[52px] flex flex-wrap items-start gap-[4px] w-full lg:mt-[15px] mt-[12px] max-md:mt-[15px]">
+                {PERSONAL_INFO_LINKS.Sojeong.links.map((link) => (
+                  <LinkContainer key={link.type} linkInfo={link} />
+                ))}
+              </div>
             </div>
-            <Image src={SojeongInfo} alt="sojeong's personal info" />
+            <Image
+              src={"/info-cards/sojeong.png"}
+              alt="sojeong's personal info"
+              width={337}
+              height={404}
+            />
           </div>
           <div className="w-fit h-full relative">
-            <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
-              {PERSONAL_INFO_LINKS.Changjoon.links.map((link) => (
-                <LinkContainer key={link.type} linkInfo={link} />
-              ))}
+            <div className="absolute flex flex-col gap-[4px] w-full bottom-[30px] lg:px-[28px] px-[22px] max-md:px-[28px]">
+              <span className="text-[#3F404D] lg:text-[20px] text-[18px] max-md:text-[20px] font-medium ">
+                Changjun Mun
+              </span>
+              <span className="text-[#FF6161] lg:text-[14px] text-[13px] max-md:text-[14px] font-medium -mt-1">
+                Co-Founder & CTO
+              </span>
+              <div className="h-[42px] lg:h-[52px] max-md:h-[52px] flex flex-wrap items-start gap-[4px] w-full lg:mt-[15px] mt-[12px] max-md:mt-[15px]">
+                {PERSONAL_INFO_LINKS.Changjoon.links.map((link) => (
+                  <LinkContainer key={link.type} linkInfo={link} />
+                ))}
+              </div>
             </div>
-            <Image src={ChangjoonInfo} alt="changjoon's personal info" />
+            <Image
+              src={"/info-cards/changjun.png"}
+              alt="changjoon's personal info"
+              width={337}
+              height={404}
+            />
           </div>
           <div className="w-fit h-full relative hidden md:block">
-            <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
-              {PERSONAL_INFO_LINKS.Sammeows.links.map((link) => (
-                <LinkContainer key={link.type} linkInfo={link} />
-              ))}
+            <div className="absolute flex flex-col gap-[4px] w-full bottom-[30px] lg:px-[28px] px-[22px] max-md:px-[28px]">
+              <span className="text-[#3F404D] lg:text-[20px] text-[18px] max-md:text-[20px] font-semibold">
+                삼냥이즈
+              </span>
+              <span className="text-[#FF6161] lg:text-[14px] text-[13px] max-md:text-[14px] font-medium -mt-1">
+                sam-meows
+              </span>
+              <div className="h-[42px] lg:h-[52px] max-md:h-[52px] flex flex-wrap items-start gap-[4px] w-full lg:mt-[15px] mt-[12px] max-md:mt-[15px]">
+                {PERSONAL_INFO_LINKS.Sammeows.links.map((link) => (
+                  <LinkContainer key={link.type} linkInfo={link} />
+                ))}
+              </div>
             </div>
-            <Image src={SammeowsInfo} alt="sammeows's personal info" />
+            <Image
+              src={"/info-cards/sammeows.png"}
+              alt="sammeows's personal info"
+              width={337}
+              height={404}
+            />
           </div>
           <div className="w-fit h-full relative">
-            <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
-              {PERSONAL_INFO_LINKS.Jaehoon.links.map((link) => (
-                <LinkContainer key={link.type} linkInfo={link} />
-              ))}
+            <div className="absolute flex flex-col gap-[4px] w-full bottom-[30px] lg:px-[28px] px-[22px] max-md:px-[28px]">
+              <span className="text-[#3F404D] lg:text-[20px] text-[18px] max-md:text-[20px] font-medium">
+                Jaehoon Kim
+              </span>
+              <span className="text-[#FF6161] lg:text-[14px] text-[13px] max-md:text-[14px] font-medium -mt-1">
+                BE Engineer
+              </span>
+              <div className="h-[42px] lg:h-[52px] max-md:h-[52px] flex flex-wrap items-start gap-[4px] w-full lg:mt-[15px] mt-[12px] max-md:mt-[15px]">
+                {PERSONAL_INFO_LINKS.Jaehoon.links.map((link) => (
+                  <LinkContainer key={link.type} linkInfo={link} />
+                ))}
+              </div>
             </div>
-            <Image src={JaehoonInfo} alt="jaehoon's personal info" />
+            <Image
+              src={"/info-cards/jaehoon.png"}
+              alt="jaehoon's personal info"
+              width={337}
+              height={404}
+            />
           </div>
           <div className="w-fit h-full relative">
-            <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
-              {PERSONAL_INFO_LINKS.Kiyeon.links.map((link) => (
-                <LinkContainer key={link.type} linkInfo={link} />
-              ))}
+            <div className="absolute flex flex-col gap-[4px] w-full bottom-[30px] lg:px-[28px] px-[22px] max-md:px-[28px]">
+              <span className="text-[#3F404D] lg:text-[20px] text-[18px] max-md:text-[20px] font-medium">
+                Kiyeon Kim
+              </span>
+              <span className="text-[#FF6161] lg:text-[14px] text-[13px] max-md:text-[14px] font-medium -mt-1">
+                FE Engineer
+              </span>
+              <div className="h-[42px] lg:h-[52px] max-md:h-[52px] flex flex-wrap items-start gap-[4px] w-full lg:mt-[15px] mt-[12px] max-md:mt-[15px]">
+                {PERSONAL_INFO_LINKS.Kiyeon.links.map((link) => (
+                  <LinkContainer key={link.type} linkInfo={link} />
+                ))}
+              </div>
             </div>
-            <Image src={KiyeonInfo} alt="kiyeon's personal info" />
+            <Image
+              src={"/info-cards/kiyeon.png"}
+              alt="kiyeon's personal info"
+              width={337}
+              height={404}
+            />
           </div>
           <div className="w-fit h-full relative">
-            <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
-              {PERSONAL_INFO_LINKS.Jina.links.map((link) => (
-                <LinkContainer key={link.type} linkInfo={link} />
-              ))}
+            <div className="absolute flex flex-col gap-[4px] w-full bottom-[30px] lg:px-[28px] px-[22px] max-md:px-[28px]">
+              <span className="text-[#3F404D] lg:text-[20px] text-[18px] max-md:text-[20px] font-medium">
+                Jina Song
+              </span>
+              <span className="text-[#FF6161] lg:text-[14px] text-[13px] max-md:text-[14px] font-medium -mt-1">
+                UX/UI Designer
+              </span>
+              <div className="h-[42px] lg:h-[52px] max-md:h-[52px] flex flex-wrap items-start gap-[4px] w-full lg:mt-[15px] mt-[12px] max-md:mt-[15px]">
+                {PERSONAL_INFO_LINKS.Jina.links.map((link) => (
+                  <LinkContainer key={link.type} linkInfo={link} />
+                ))}
+              </div>
             </div>
-            <Image src={JinaInfo} alt="jina's personal info" />
+            <Image
+              src={"/info-cards/jina.png"}
+              alt="jina's personal info"
+              width={337}
+              height={404}
+            />
           </div>
           <div className="w-fit h-full relative block md:hidden">
-            <div className="h-[52px] absolute flex flex-wrap items-start gap-[4px] w-full bottom-[28px] pl-[28px]">
-              {PERSONAL_INFO_LINKS.Sammeows.links.map((link) => (
-                <LinkContainer key={link.type} linkInfo={link} />
-              ))}
+            <div className="absolute flex flex-col gap-[4px] w-full bottom-[30px] lg:px-[28px] px-[22px] max-md:px-[28px]">
+              <span className="text-[#3F404D] lg:text-[20px] text-[18px] max-md:text-[20px] font-semibold">
+                삼냥이즈
+              </span>
+              <span className="text-[#FF6161] lg:text-[14px] text-[13px] max-md:text-[14px] font-medium -mt-1">
+                sam-meows
+              </span>
+              <div className="h-[42px] lg:h-[52px] max-md:h-[52px] flex flex-wrap items-start gap-[4px] w-full lg:mt-[15px] mt-[12px] max-md:mt-[15px]">
+                {PERSONAL_INFO_LINKS.Sammeows.links.map((link) => (
+                  <LinkContainer key={link.type} linkInfo={link} />
+                ))}
+              </div>
             </div>
-            <Image src={SammeowsInfo} alt="sammeows's personal info" />
+            <Image
+              src={"/info-cards/sammeows.png"}
+              alt="sammeows's personal info"
+              width={337}
+              height={404}
+            />
           </div>
         </div>
       </section>
@@ -547,7 +648,7 @@ export default function Home() {
             </span>
           </div>
           <Image
-            src={SammeowsLogo}
+            src={"/sammeows-logo.svg"}
             alt="sammeows logo"
             width={112}
             height={24}
