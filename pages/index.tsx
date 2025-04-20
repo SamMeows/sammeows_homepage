@@ -124,7 +124,7 @@ const LineBreakDesktopOnly = () => <br className="hidden sm:block" />;
 const LinkContainer = ({ linkInfo }: { linkInfo: Link }) => {
   return (
     <button
-      className="flex items-center gap-[4px] lg:gap-[2px] max-md:gap-[4px] bg-[#3F404D] rounded-[6px] lg:text-[12px] text-[10px] max-md:text-[12px] text-white py-[3px] px-[5px] w-fit h-fit font-normal hover:bg-[#3F404D]/80 transition-all duration-300"
+      className="flex items-center gap-[4px] bg-[#3F404D] rounded-[6px] lg:text-[12px] text-[10px] max-md:text-[12px] text-white py-[3px] px-[5px] w-fit h-fit font-normal hover:bg-[#3F404D]/80 transition-all duration-300"
       onClick={() => window.open(linkInfo.url, "_blank")}
     >
       <Image
@@ -155,15 +155,22 @@ export default function Home() {
           if (!mostVisible) return entry;
           const currentRatio = entry.intersectionRatio;
           const mostVisibleRatio = mostVisible.intersectionRatio;
+
+          // If current section is more than 50% visible, prefer it
+          if (currentRatio > 0.5) return entry;
+          if (mostVisibleRatio > 0.5) return mostVisible;
+
+          // Otherwise prefer the more visible section
           return currentRatio > mostVisibleRatio ? entry : mostVisible;
         }, null as IntersectionObserverEntry | null);
 
-        if (mostVisibleSection && mostVisibleSection.intersectionRatio === 0) {
+        if (mostVisibleSection && mostVisibleSection.intersectionRatio > 0.1) {
           setSelectedSection(mostVisibleSection.target.id as Section);
         }
       },
       {
-        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+        threshold: [0.1, 0.3, 0.5, 0.7],
+        rootMargin: "-10% 0px -10% 0px", // 상하 10%는 무시
       }
     );
 
