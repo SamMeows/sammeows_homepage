@@ -622,12 +622,6 @@ export default function Home() {
               <LineBreakMobileOnly />
               contact@sam-meows.com
             </span>
-            <span>
-              205-1204, Sucheong 1-ro, <LineBreakMobileOnly />
-              Dangjin-si, ChungcheongNam-do <LineBreakMobileOnly />
-              <LineBreakDesktopOnly />
-              Republic of Korea
-            </span>
           </p>
         </div>
         {/* 오른쪽 텍스트 */}
