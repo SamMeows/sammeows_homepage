@@ -11,112 +11,16 @@ import MailMiniIcon from "@/public/link-icons/mail-icon.svg";
 import LinkedInMiniIcon from "@/public/link-icons/linkedin-icon.svg";
 import DisquietMiniIcon from "@/public/link-icons/disquiet-icon.svg";
 import { useState, useEffect } from "react";
+import { Link, PERSONAL_INFO_LINKS } from "@/constants/personal-info";
+import { type ExtendedRecordMap } from "notion-types";
+import { NotionAPI } from "notion-client";
+import { NotionPage } from "@/components/NotionPage";
 
 // sm: 핸드폰, md: 태블릿, xl: 데스크탑
-// sm: 핸드폰, md: 태블릿, xl: 데스크탑
+
+const ROOT_NOTION_ID = process.env.NEXT_PUBLIC_NOTION_PAGE_ID || "";
+
 type Section = "" | "about us" | "service" | "team" | "contact";
-
-type Link = {
-  type: string;
-  label: string;
-  url: string;
-};
-
-// type PersonalInfo = {
-//   name: string;
-//   links: Link[];
-// };
-
-const PERSONAL_INFO_LINKS = {
-  Sojeong: {
-    links: [
-      {
-        type: "LinkedIn",
-        label: "sojeong",
-        url: "https://www.linkedin.com/in/%EC%86%8C%EC%A0%95%EC%B5%9C-525792231/",
-      },
-      {
-        type: "Disquiet",
-        label: "sojeong",
-        url: "https://disquiet.io/@daisyhyeseul",
-      },
-      {
-        type: "Mail",
-        label: "ceo@sam-meows.com",
-        url: "mailto:ceo@sam-meows.com",
-      },
-    ] as Link[],
-  },
-  Changjoon: {
-    links: [
-      {
-        type: "LinkedIn",
-        label: "ChangJun (문창준) Mun",
-        url: "https://www.linkedin.com/in/changjun-mun/",
-      },
-      {
-        type: "Disquiet",
-        label: "codeztree",
-        url: "https://disquiet.io/@codeztree",
-      },
-      {
-        type: "Mail",
-        label: "cto@sam-meows.com",
-        url: "mailto:cto@sam-meows.com",
-      },
-    ] as Link[],
-  },
-  Jaehoon: {
-    links: [
-      {
-        type: "LinkedIn",
-        label: "김재훈",
-        url: "https://www.linkedin.com/in/hoon0214/",
-      },
-      {
-        type: "Mail",
-        label: "JHoon@sam-meows.com",
-        url: "mailto:JHoon@sam-meows.com",
-      },
-    ] as Link[],
-  },
-  Kiyeon: {
-    links: [
-      {
-        type: "LinkedIn",
-        label: "Kiyeon Kim",
-        url: "https://www.linkedin.com/in/kiyeon-kim/",
-      },
-      {
-        type: "Disquiet",
-        label: "kiyeon831",
-        url: "https://disquiet.io/@kyean831",
-      },
-      {
-        type: "Mail",
-        label: "arky02@sam-meows.com",
-        url: "mailto:arky02@sam-meows.com",
-      },
-    ] as Link[],
-  },
-  Jina: {
-    links: [
-      {
-        type: "LinkedIn",
-        label: "송지나",
-        url: "https://www.linkedin.com/in/%EC%A7%80%EB%82%98-%EC%86%A1-9a7222336/",
-      },
-      {
-        type: "Mail",
-        label: "najina@sam-meows.com",
-        url: "mailto:najina@sam-meows.com",
-      },
-    ] as Link[],
-  },
-  Sammeows: {
-    links: [] as Link[],
-  },
-} as const;
 
 const LineBreakMobileOnly = () => <br className="block sm:hidden" />;
 const LineBreakDesktopOnly = () => <br className="hidden sm:block" />;
@@ -144,7 +48,20 @@ const LinkContainer = ({ linkInfo }: { linkInfo: Link }) => {
   );
 };
 
-export default function Home() {
+export const getStaticProps = async () => {
+  const notion = new NotionAPI();
+
+  const recordMap = await notion.getPage(ROOT_NOTION_ID);
+
+  return {
+    props: {
+      recordMap,
+    },
+    revalidate: 10,
+  };
+};
+
+export default function Home({ recordMap }: { recordMap: ExtendedRecordMap }) {
   const [selectedSection, setSelectedSection] = useState<Section>("");
 
   useEffect(() => {
@@ -348,6 +265,14 @@ export default function Home() {
           />
           Go and Meet Ritty &gt;
         </button>
+      </section>
+
+      <section className="max-w-[1120px] w-full h-full mx-auto text-white sm:text-[62px] text-[44px] font-semibold mt-[120px] pl-[20px] sm:pl-[40px] xl:pl-[0px] leading-[120%] max-sm:leading-[100%]">
+        <h2 className="font-semibold text-[32px] md:text-[36px] text-[#3F404D] leading-[125%] mb-[30px] md:mb-[30px]">
+          SamMeows <LineBreakMobileOnly />
+          Notice Board
+        </h2>
+        <NotionPage recordMap={recordMap} rootPageId={ROOT_NOTION_ID} />
       </section>
 
       {/* Team Section */}

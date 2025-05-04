@@ -30,6 +30,7 @@ body {
 @theme {
   --font-sans: Poppins;
   --breakpoint-3xl: 1920px;
+  --notion-max-width: 1280px;
 }
 
 button {
@@ -40,7 +41,16 @@ button {
 
 img {
   user-select: none;
-  -webkit-user-select: none;  
+  -webkit-user-select: none;
   user-drag: none;
   -webkit-user-drag: none;
+}
+
+.notion-page {
+  margin: 0 10px !important;
+
+  @media screen and (max-width: 768px) {
+    margin: 0 !important;
+    padding: 0 10px !important;
+  }
 }
