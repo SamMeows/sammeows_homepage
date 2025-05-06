@@ -67,33 +67,33 @@ export default function Home({ recordMap }: { recordMap: ExtendedRecordMap }) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find the section that is most visible
-        const mostVisibleSection = entries.reduce((mostVisible, entry) => {
-          if (!mostVisible) return entry;
-          const currentRatio = entry.intersectionRatio;
-          const mostVisibleRatio = mostVisible.intersectionRatio;
+        // 현재 보이는 섹션 중 가장 많이 보이는 것 선택
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
 
-          // If current section is more than 50% visible, prefer it
-          if (currentRatio > 0.5) return entry;
-          if (mostVisibleRatio > 0.5) return mostVisible;
+        if (visibleEntries.length > 0) {
+          // 가장 많이 보이는 섹션 찾기
+          const mostVisible = visibleEntries.reduce((prev, current) => {
+            return prev.intersectionRatio > current.intersectionRatio
+              ? prev
+              : current;
+          });
 
-          // Otherwise prefer the more visible section
-          return currentRatio > mostVisibleRatio ? entry : mostVisible;
-        }, null as IntersectionObserverEntry | null);
-
-        if (mostVisibleSection && mostVisibleSection.intersectionRatio > 0.1) {
-          setSelectedSection(mostVisibleSection.target.id as Section);
+          // 섹션이 충분히 보이면 선택
+          setSelectedSection(mostVisible.target.id as Section);
         }
       },
       {
-        threshold: [0.1, 0.3, 0.5, 0.7],
-        rootMargin: "-10% 0px -10% 0px", // 상하 10%는 무시
+        threshold: 0.4, // 단일 threshold - 요소의 40%가 보이면 감지
+        rootMargin: "-10% 0px", // 상단만 10% 무시
       }
     );
 
     // Observe all sections
     const sectionElements = document.querySelectorAll("section[id]");
-    sectionElements.forEach((section) => observer.observe(section));
+    sectionElements.forEach((section) => {
+      console.log(section.getBoundingClientRect());
+      observer.observe(section);
+    });
 
     return () => {
       sectionElements.forEach((section) => observer.unobserve(section));
@@ -101,11 +101,11 @@ export default function Home({ recordMap }: { recordMap: ExtendedRecordMap }) {
   }, []);
 
   const handleScrollToSection = (section: Section) => {
-    setSelectedSection(section);
     const element = document.getElementById(section);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+    // setSelectedSection(section);
   };
 
   return (
