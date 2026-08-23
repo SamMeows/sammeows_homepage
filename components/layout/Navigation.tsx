@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-type Section = "" | "about" | "product" | "news" | "contact";
+type Section = "" | "about" | "product" | "news" | "team" | "contact";
 
 interface NavigationProps {
   selectedSection: Section;
@@ -15,6 +15,7 @@ const navItems: { id: Section; label: string; width: string }[] = [
   { id: "about", label: "About", width: "85px" },
   { id: "product", label: "Product", width: "95px" },
   { id: "news", label: "News", width: "80px" },
+  { id: "team", label: "Team", width: "80px" },
   { id: "contact", label: "Contact", width: "95px" },
 ];
 

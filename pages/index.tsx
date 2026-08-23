@@ -6,9 +6,10 @@ import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ProductSection from "@/components/sections/ProductSection";
 import NewsSection from "@/components/sections/NewsSection";
+import TeamSection from "@/components/sections/TeamSection";
 import ContactSection from "@/components/sections/ContactSection";
 
-type Section = "" | "about" | "product" | "news" | "contact";
+type Section = "" | "about" | "product" | "news" | "team" | "contact";
 
 export default function Home() {
   const [selectedSection, setSelectedSection] = useState<Section>("");
@@ -93,6 +94,7 @@ export default function Home() {
         <AboutSection />
         <ProductSection />
         <NewsSection />
+        <TeamSection />
         <ContactSection />
         <Footer />
       </main>

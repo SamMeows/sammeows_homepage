@@ -38,8 +38,8 @@ export const PERSONAL_INFO_LINKS = {
       },
       {
         type: "Mail",
-        label: "cto@sam-meows.com",
-        url: "mailto:cto@sam-meows.com",
+        label: "changjun.mun@sam-meows.com",
+        url: "mailto:changjun.mun@sam-meows.com",
       },
     ] as Link[],
   },
@@ -52,40 +52,9 @@ export const PERSONAL_INFO_LINKS = {
       },
       {
         type: "Mail",
-        label: "JHoon@sam-meows.com",
-        url: "mailto:JHoon@sam-meows.com",
+        label: "jaehoon.kim@sam-meows.com",
+        url: "mailto:jaehoon.kim@sam-meows.com",
       },
     ] as Link[],
-  },
-  Hyorin: {
-    links: [
-      {
-        type: "LinkedIn",
-        label: "Hyorin Lim",
-        url: "https://www.linkedin.com/in/hyorin01/",
-      },
-      {
-        type: "Mail",
-        label: "linad@sam-meows.com",
-        url: "mailto:linad@sam-meows.com",
-      },
-    ] as Link[],
-  },
-  Jina: {
-    links: [
-      {
-        type: "LinkedIn",
-        label: "송지나",
-        url: "https://www.linkedin.com/in/%EC%A7%80%EB%82%98-%EC%86%A1-9a7222336/",
-      },
-      {
-        type: "Mail",
-        label: "najina@sam-meows.com",
-        url: "mailto:najina@sam-meows.com",
-      },
-    ] as Link[],
-  },
-  Sammeows: {
-    links: [] as Link[],
   },
 } as const;

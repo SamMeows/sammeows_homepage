@@ -59,11 +59,10 @@ export default function Footer() {
 
       <FadeInView delay={0.3} direction="left">
         <div className="flex flex-col gap-[41px]">
-          <div className="flex flex-col items-end gap-[5px] text-[#9AA2AE] text-[14px] font-medium leading-[136%]">
-            <motion.div
-              className="font-light"
-              whileHover={{ scale: 1.02 }}
-            >
+          <div className="flex flex-col md:items-end items-center gap-[5px] text-[#9AA2AE] text-[14px] font-light leading-[160%]">
+            <div>삼냥이즈 주식회사 (SamMeows Inc.) | 대표 최소정, 문창준</div>
+            <div>사업자등록번호 823-88-03261</div>
+            <motion.div whileHover={{ scale: 1.02 }}>
               2025 © Sam-Meows Inc. All Rights Reserved.
             </motion.div>
           </div>

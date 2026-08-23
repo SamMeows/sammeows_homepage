@@ -5,6 +5,10 @@ import Image from "next/image";
 import { useRef, MouseEvent } from "react";
 import FadeInView from "@/components/ui/FadeInView";
 import RittyMiniIcon from "@/public/ritty-mini-logo.svg";
+import {
+  PRODUCT_VIDEOS,
+  RITTY_YOUTUBE_CHANNEL_URL,
+} from "@/constants/product-videos";
 
 const LineBreakMobileOnly = () => <br className="block sm:hidden" />;
 
@@ -13,6 +17,39 @@ interface ProductButtonProps {
   onClick: () => void;
   variant: "primary" | "secondary";
   icon?: React.ReactNode;
+}
+
+function ShortsEmbed({
+  videoId,
+  title,
+  delay = 0,
+}: {
+  videoId: string;
+  title: string;
+  delay?: number;
+}) {
+  return (
+    <motion.div
+      className="relative rounded-[16px] overflow-hidden bg-black flex-shrink-0 w-[220px] md:w-[250px] aspect-[9/16]"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, delay, ease: "easeOut" }}
+      whileHover={{
+        y: -8,
+        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.15)",
+      }}
+    >
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+        title={title}
+        className="w-full h-full border-0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        loading="lazy"
+      />
+    </motion.div>
+  );
 }
 
 function ProductButton({ children, onClick, variant, icon }: ProductButtonProps) {
@@ -67,7 +104,7 @@ export default function ProductSection() {
   return (
     <section
       id="product"
-      className="relative w-full h-auto min-h-screen py-[80px] md:py-0 md:h-[100vh] bg-[#F6F7F9] flex flex-col items-center justify-center gap-[20px] md:gap-[30px] px-[20px] md:px-0"
+      className="relative w-full h-auto min-h-screen py-[80px] md:py-[120px] bg-[#F6F7F9] flex flex-col items-center justify-center gap-[20px] md:gap-[30px] px-[20px] md:px-0"
     >
       <FadeInView>
         <div className="flex flex-col text-center">
@@ -179,6 +216,38 @@ export default function ProductSection() {
             iOS &gt;
           </ProductButton>
         </motion.div>
+      </FadeInView>
+
+      {/* Live Product Preview (YouTube Shorts) */}
+      <FadeInView delay={0.2}>
+        <div className="flex flex-col items-center text-center mt-[40px] md:mt-[60px]">
+          <h3 className="font-semibold text-[22px] md:text-[28px] text-[#3F404D] leading-[125%]">
+            영상으로 만나는 <span className="text-[#716BF8]">리티</span>
+          </h3>
+          <span className="text-[#9AA2AE] text-[14px] md:text-[16px] mt-[10px]">
+            실제 앱에서 리티와 함께하는 순간들
+          </span>
+        </div>
+      </FadeInView>
+
+      <div className="flex md:gap-[20px] gap-[14px] flex-wrap justify-center">
+        {PRODUCT_VIDEOS.map((video, index) => (
+          <ShortsEmbed
+            key={video.id}
+            videoId={video.id}
+            title={video.title}
+            delay={index * 0.1}
+          />
+        ))}
+      </div>
+
+      <FadeInView delay={0.2}>
+        <button
+          onClick={() => window.open(RITTY_YOUTUBE_CHANNEL_URL, "_blank")}
+          className="text-[#9AA2AE] text-[14px] md:text-[16px] font-medium cursor-pointer hover:text-[#FF6161] transition-colors duration-300"
+        >
+          YouTube에서 더 보기 &gt;
+        </button>
       </FadeInView>
     </section>
   );
